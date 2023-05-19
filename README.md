@@ -26,13 +26,13 @@ The data was downloaded from [OraclesElixir](https://oracleselixir.com/tools/dow
 
 #### Data Cleaning 
 The majority of the data cleaning took place with converting integer types to boolean types. Many columns were listed as 0-1 representation instead of True/False. This leads to a lot of memory being wasted when loading up the `DataFrame`, so that was my first priority. To be more specific, the columns I converted to boolean representation include: `['firstblood', 'firstdragon', 'firsttower', 'firstmidtower', 'firsttothreetowers', 'isplayoff', 'side', 'heralds', 'firstherald']`. I also corrected the type of the `'date'` column, and convereted it to `pandas.DateTime`. In addition to this, I found it incredibly helpful to split the provided `DataFrame` into two dataframes, one containing team data and another containing match aggregrate data for each team. They still maintianed a common `'gameid'` and `'blueside'` column, making it so that I could re-oin the two given the ncessesity. Here is what the `player_data` frame looked like:
-| blueside   | isplayoff   | result   | position   | champion   |   goldat15 |   deathsat15 |   killsat15 |     dpm |   towers |   patch | gameid                |
-|:-----------|:------------|:---------|:-----------|:-----------|-----------:|-------------:|------------:|--------:|---------:|--------:|:----------------------|
-| True       | False       | False    | top        | Renekton   |       5025 |            0 |           0 | 552.294 |      nan |   12.01 | ESPORTSTMNT01_2690210 |
-| True       | False       | False    | jng        | Xin Zhao   |       5366 |            2 |           2 | 412.084 |      nan |   12.01 | ESPORTSTMNT01_2690210 |
-| True       | False       | False    | mid        | LeBlanc    |       5118 |            0 |           0 | 499.405 |      nan |   12.01 | ESPORTSTMNT01_2690210 |
-| True       | False       | False    | bot        | Samira     |       5461 |            2 |           2 | 389.002 |      nan |   12.01 | ESPORTSTMNT01_2690210 |
-| True       | False       | False    | sup        | Leona      |       3836 |            2 |           1 | 128.301 |      nan |   12.01 | ESPORTSTMNT01_2690210 |
+| blueside   | isplayoff   | result   | position   | champion   |   goldat15 |   deathsat15 |   killsat15 |     dpm |   patch | gameid                |
+|:-----------|:------------|:---------|:-----------|:-----------|-----------:|-------------:|------------:|--------:|--------:|:----------------------|
+| True       | False       | False    | top        | Renekton   |       5025 |            0 |           0 | 552.294 |   12.01 | ESPORTSTMNT01_2690210 |
+| True       | False       | False    | jng        | Xin Zhao   |       5366 |            2 |           2 | 412.084 |   12.01 | ESPORTSTMNT01_2690210 |
+| True       | False       | False    | mid        | LeBlanc    |       5118 |            0 |           0 | 499.405 |   12.01 | ESPORTSTMNT01_2690210 |
+| True       | False       | False    | bot        | Samira     |       5461 |            2 |           2 | 389.002 |   12.01 | ESPORTSTMNT01_2690210 |
+| True       | False       | False    | sup        | Leona      |       3836 |            2 |           1 | 128.301 |   12.01 | ESPORTSTMNT01_2690210 |
 
 And then the head of the `game_data` frame looks like: 
 | blueside   | isplayoff   | result   |   goldat15 |   deathsat15 |   killsat15 |     dpm |   turretplates |   towers |   patch | gameid                |
