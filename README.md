@@ -42,5 +42,9 @@ And then the head of the `game_data` frame looks like:
 | True       | False       | False    |      23522 |            3 |           1 | 1690.98 |              2 |        3 |   12.01 | ESPORTSTMNT01_2690219 |
 | False      | False       | True     |      25285 |            1 |           3 | 2124.55 |              3 |       11 |   12.01 | ESPORTSTMNT01_2690219 |
 | True       | False       | True     |        nan |          nan |         nan | 1762.02 |            nan |        8 |   12.01 | 8401-8401_game_1      |
+
 #### Univariate and Bivariate Analysis
-The first question I had pertained tower destruction. More specifically, I wanted to know how many towers were destroyed each game, as this was fundamental to my assumptions around Ashe and her ability to capture objectives. I initially drew a histogram of how many towers are getting destroyed in each game. 
+The first question I had pertained tower destruction. More specifically, I wanted to know how many towers were destroyed each game, as this was fundamental to my assumptions around Ashe and her ability to capture objectives. I initially drew a histogram of how many towers are getting destroyed in each game:
+<iframe src="assets/towers_univariate.html" width=800 height=600 frameBorder=0></iframe>
+This histogram appeared to be bimodal, and it lead me to reason that this was because teams who win the game are going to have to destroy more towers. The existence of any values under 5 proved this, given that no surrenders happen in the professional field. I then plotted the destruction rate of towers, and colored each team such that you could differentiate between them.
+<iframe src="assets/towers_bivariate.html" width=800 height=600 frameBorder=0></iframe>
