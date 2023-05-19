@@ -46,5 +46,20 @@ And then the head of the `game_data` frame looks like:
 #### Univariate and Bivariate Analysis
 The first question I had pertained tower destruction. More specifically, I wanted to know how many towers were destroyed each game, as this was fundamental to my assumptions around Ashe and her ability to capture objectives. I initially drew a histogram of how many towers are getting destroyed in each game:
 <iframe src="assets/towers_univariate.html" width=800 height=600 frameBorder=0></iframe>
-This histogram appeared to be bimodal, and it lead me to reason that this was because teams who win the game are going to have to destroy more towers. The existence of any values under 5 proved this, given that no surrenders happen in the professional field. I then plotted the destruction rate of towers, and colored each team such that you could differentiate between them.
+This histogram appeared to be bimodal, and it lead me to reason that this was because teams who win the game are going to have to destroy more towers. The existence of any values under 5 proved this, given that no surrenders happen in the professional field. I then plotted the same histogram, except I colored winning teams red, and losing teams blue. This helped differentiate which data was coming from where.
 <iframe src="assets/towers_bivariate.html" width=800 height=600 frameBorder=0></iframe>
+After looking at this histogram, I realized that it was exactly what I'd expect, and there likely wont be much to reason off of towers and winrates. There was not enough games where people lost but had many towers destroyed for me to go futher down this line of thinking. Instead, I began to question gold distribution at 15 minutes, as this would be a more solid metric for predicting the future of a game. This lead me to plot a histogram from `player_data` of the column `goldat15`.
+<iframe src="assets/gold15_univariate.html" width=800 height=600 frameBorder=0></iframe>
+Looking at this graph, you see a similar scenario with two peaks. Knowing the support role decently well, I quickly understood it's because supports get much less gold, especially in the early game. The first hill in the histogram was likely due to low-income roles, like support and jungle. To prove this, I plotted another colored histogram, where each color represented a role.
+<iframe src="assets/gold_bivariate.html" width=800 height=600 frameBorder=0></iframe>
+This histogram supported part of my hypothesis, but showed that junglers recieve more gold than I had previously thought. Thinking about supports more, I have recently played against a lot of Ashe supports, and thought it would be interesting to see how much gold and damage they deal. I considered if Ashe support was in fact stronger than Ashe bot, as thats how I had percieved it. To get more insight on this, I aggregrated the data to show the difference in `goldat15`, `dpm`, `killsat15`, and `deathsat15` for Ashe support againt Ashe bot.
+| position   |   goldat15 |   deathsat15 |   killsat15 |     dpm |
+|:-----------|-----------:|-------------:|------------:|--------:|
+| bot        |       5093 |            0 |           0 | 471.978 |
+| sup        |       3532 |            1 |           0 | 389.309 |
+Looking at it, I was surprised to see that he numbers, especially for dpm, are not too far off. But without having any baseline metric to compare it against, I needed to check the overall averages for the same statistics between all supports and botlane. 
+| position   |   goldat15 |   deathsat15 |   killsat15 |     dpm |
+|:-----------|-----------:|-------------:|------------:|--------:|
+| bot        |       5391 |            0 |           1 | 531.121 |
+| sup        |       3385 |            1 |           0 | 151.88  |
+Looking at this, we can see that the gold and dpm for Ashe bot is lower than the overall averages, and at the same time the gold and dpm for Ashe support is higher than the overall averages. This really piquied my interest and so I decided to transition my initial 'hypothesis' to be more around this topic: is Ashe support just as strong, or possibly stronger, than Ashe bot?
