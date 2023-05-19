@@ -1,4 +1,4 @@
-# Analyzing the Impact of Different Champions and Objectives
+# Analyzing the Impact of Champions and Objectives
 
 Sebastian Modafferi
 
@@ -7,7 +7,7 @@ My goal with this data was to draw a few conclusions about different champions, 
 
 #### About the Dataset
 The data was downloaded from [OraclesElixir](https://oracleselixir.com/tools/downloads). They provide yearly data on the professional scene of League of Legends. I am working with the 2022 data since it contains the most up-to-date and simeltaenously year-long observations. The data comes in a `csv` file, where there is 12 rows for each game. 10 rows for the competeing players, and 2 rows for team-aggregate data. There was a total of 149400 entries, which comes out to 12450 games. As for the columns, there was 123. Many of these were not used, however the most used columns for my analysis were:
- - `url`: this column was used for verfying the cleaning process of data. It contains a URL link to matches, which could be used to confirm boolean representation of different numerically represented observations.
+ - `url`: this column was used for verfying the data cleaning process. It contains a URL link to matches, which could be used to confirm a boolean representation of different numerically represented observations.
  - `result`: this column represents if the team (or player), won or lost that game.
  - `side`: this column represents the side of the map that the given player/team played on. It was later converted to a boolean representation with the title `blueside`.
  - `playoffs`: this column describes if the match was taken place in part of a playoff series or not. It was later converted to a boolean representation with the title `isplayoff`.
