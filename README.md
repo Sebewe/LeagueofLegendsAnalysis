@@ -72,19 +72,51 @@ Looking at this, we can see that the gold and dpm for Ashe bot is lower than the
 
 ### Assessments of Missingness
 
+#### NMAR Analysis
+I believe that the missingness for the columns `ban#` (where # is 1-5) are **NMAR**. This is because not only are there very few values missing, but they are different for each ban column. This suggests that the reason it is missing is because it is either a champion that was not correctly updated to the database directly after release. i.e, they are playing a 'new' champion in the games, and they haven't been added to the database that OracleElixer collects from before the match. Or, it could also be that the team decided not to ban a champion in that ban round. If the amount of missing values for each `ban#` column were the same, it would suggest that it was an error in collecting the data as a whole, but since they are all different, it suggests that the error is due to the previous reasons stated.
+
+#### Missingness Dependency
 Since I was still curious about measuring objectives, I decided to look into why so many values in the `turretplates` column were missing. My initial hypothesis was games that were less relevant to the scene (i.e. not playoffs) may have not been recorded or uploaded since it was assumed people wouldn't be interested in them. To test this hypothesis, I set up a **permutation test** with these hypotheses:
  - **null hypothesis**: `turretplates` missing is due to randomness.
- - **alternative hypothesis**: `turretplates` missing is related to the game being a playoff game or not.
- - **test statistic**: I decided to use difference in group means, where the mean is the amount of playoff matches divided by the total amount of matches. 
+ - **alternative hypothesis**: `turretplates` missing is related to the game being a `playoff` game or not.
+ - **test statistic**: I decided to use `difference in group means`, where the mean is the amount of playoff matches divided by the total amount of matches. 
  - **p-value**: I decided to set my p-value to 0.05 for this test.
 After running the permutation test over 1000 trials, here is the plotted distribution:
 <iframe src="assets/missing_playoff.html" width=800 height=600 frameBorder=0></iframe>
-This distribution, and the associated 0.0% likelihood shows that turretplates missing is associated with the match being a playoff or not. While this was interesting to find out, I knew that specific patches were more likey to be played during the playoffs. To confirm this I plotted the bar-chart below
+This distribution, and the associated 0.0 p-value allows me to **disprove the null hypothesis**, and suggests that the missingness of the `turretplates` column is associated with the values in the `isplayoff` column. While this was interesting to find out, I knew that specific patches were more likey to be played during the playoffs. To confirm this I plotted the bar-chart below
 <iframe src="assets/playoff_patch_bar.html" width=800 height=600 frameBorder=0></iframe>
 After confirming that playoff matches were not evenly spread out throughout patches, it lead me to question if the `turretplates` column being missing was because of the patch not outputting compatible data for OracleElixir to collect and provide. To test this suspiscion, I laid out another **permutation test**:
  - **null hypothesis**: `turretplates` missing is due to randomness.
- - **alternative hypothesis**: `turretplates` missing is related to the patch of the game that was played in.
+ - **alternative hypothesis**: `turretplates` missing is related to the `patch` of the game that was played in.
  - **test statistic**: Since patches are most accurately treated as categorical distributions, **total variation distance** was going to be the most accurate test statistic available to me.
  - **p-value**: I decided to set my p-value to 0.05 for this test.
  After running the permutation test over 1000 tirals, here is the plotted distribution:
  <iframe src="assets/missing_patch.html" width=800 height=600 frameBorder=0></iframe>
+ This distrubtion, and the associated 0.0 p-value, showed that I was able to **disprove the null hypothesis**. This gives suggestion that the missingness for `turretplates` was due to both to the values in the `patch` and `isplayoff` column. This lead me to question if it also had anything to do with the amount of towers destroyed? To answer this, I laid out a 3rd (and final) **permutation test** to determine missingness:
+ - **null hypothesis**: `turretplates` missing is due to randomness.
+ - **alternative hypothesis**: `turretplates` missing is related to the amount of `towers` destroyed by that team.
+ - **test statistic**: Since towers is a numerical variable, I felt it was best to describe this with another `difference in group means`.
+ - **p-value**: I decided to set my p-value to 0.05 for this test.
+After running the permutation test over 1000 tirals, here is the plotted distribution:
+<iframe src="assets/missing_towers.html" width=800 height=600 frameBorder=0></iframe>
+This plot, and the associated 41% likelihood showed that I **failed to disprove the null hypothesis**. Which suggests that the missingness of the `turretplates` column is **not** related the values in the `towers` column. Ultimately, I believe that the missingness for the `turretplates` column is related to the patch, and the reason there is an association between the missingness of `turretplates` and `playoff` is because of the association between `playoff` and `patch`. 
+
+### Hypothesis Testing
+
+The first one I'd like to test is *whether or not Ashe games tend to have more towers destroyed*. For this question, we will set up our experiment like this:
+ - **null hypothesis**: Playing Ashe and not playing Ashe have the **same average amount of towers destroyed**
+ - **alternative hypothesis**: Playing Ashe leads to **less towers destroyed than** not playing Ashe.
+ - I will use a **permutation test**. This is because I want to get an understanding of the entirety of the game, and don't want to accept the 2022 professional state of the game as my population distribution.
+ - **test statistic**: I will be using (mean towers destroyed **not playing** Ashe) - (mean towers destroyed **playing** Ashe). I chose this since my alternative hypothesis suggests a difference in one direction, a larger test statistic will support this.
+ - **p-value**: I've decided to again choose a 0.05 p-value.
+ After setting up my experiment and collecing 1000 simulated test statistics, here was the plotted distribution:
+<iframe src="assets/hypothesis_towers.html" width=800 height=600 frameBorder=0></iframe>
+Given the plot, and the 22% chance of finding this under the **null hypothesis** means that I **failed to reject the null hypothesis**. This suggests that Ashe does not on average destroy less towers than other laners. However it **does not** suggest that she destroys more. This being said, this test was laid out with both Ashe bot and Ashe support, so I decided to run a test to see if one would be better than the other. To do this, I tested `dpm`, damage per minute. I wanted to determine if the difference between Ashe support dpm and Ashe bot dpm was purely due to chance, and in reality they have the **same damage distribution**. I laid out my experiemnt like this:
+ - **Null Hypothesis**: Ashe bot and Ashe sup have the same dpm, and the variation we see is due to randomness.
+ - **Alternative Hypothesis**: Ashe bot does **more damage per minute** than ashe support, and the variation we see is due to this.
+ - **Test statistic**: I will be using (mean ashe bot dpm) - (mean ashe sup dpm) as my test statistic. This is because a larger test statistic will point in favor of the alternative hypothesis, making it simpler to tess a p-value.
+ - **Test type**: Since the hypothesis is not claiming for the observed data to be the true population data, but rather we are trying to extrapolate from this data to a larger population, we will again be using a **permutation test**.
+ - **p-value**: I've decided to again choose a 0.05 p-value.
+After setting up my experiment and collecting 100 simulated test statistics, here was the plotted distribution:
+<iframe src="assets/hypothesis_dpm.html" width=800 height=600 frameBorder=0></iframe>
+This distribtion, and the associated 0.0% chance of finding it under the **null hypothesis** means that I was **able to reject the null hypothesis**. This suggests that Ashe bot has a higher `dpm` than Ashe support, meaning my theory of them being on par is not true, as far as damage is concerned.
